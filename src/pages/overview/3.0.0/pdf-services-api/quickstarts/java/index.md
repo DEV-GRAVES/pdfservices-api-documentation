@@ -17,7 +17,7 @@ To complete this guide, you will need:
 
 ## Step One: Getting credentials
 
-1) To begin, open your browser to <https://documentservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
+1) To begin, open your browser to <https://acrobatservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
 
 ![Sign in](./shot1.png)
 
@@ -71,7 +71,7 @@ Note that that private key is *also* found in this directory so feel free to cop
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <pdfservices.sdk.version>2.2.2</pdfservices.sdk.version>
+    <pdfservices.sdk.version>3.3.0</pdfservices.sdk.version>
   </properties>
 
   <dependencies>

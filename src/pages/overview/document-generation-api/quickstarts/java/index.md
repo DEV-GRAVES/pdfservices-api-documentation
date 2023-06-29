@@ -17,7 +17,7 @@ To complete this guide, you will need:
 
 ## Step One: Getting credentials
 
-1) To begin, open your browser to <https://documentservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=document-generation-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
+1) To begin, open your browser to <https://acrobatservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=document-generation-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
 
 ![Sign in](./shot1.png)
 
@@ -29,29 +29,21 @@ To complete this guide, you will need:
 
 5) Click the checkbox saying you agree to the developer terms and then click "Create credentials."
 
-![Project setup](./shot2.png)
+![Project setup](./shot2_spc.png)
 
 6) After your credentials are created, they are automatically downloaded:
 
-![alt](./shot3.png)
+![alt](./shot3_spc.png)
 
 ## Step Two: Setting up the project
 
-1) In your Downloads folder, find the ZIP file with your credentials: PDFServicesSDK-JavaSamples.zip. If you unzip that archive, you will find a README file, your private key, and a folder of samples:
+1) In your Downloads folder, find the ZIP file with your credentials: PDFServicesSDK-JavaSamples.zip. If you unzip that archive, you will find a folder of samples and the `pdfservices-api-credentials.json` file.
 
-![alt](./shot5.png)
+![alt](./shot5_spc.png)
 
-2) We need two things from this download. The `private.key` file (as shown in the screenshot above, and the `pdfservices-api-credentials.json` file found in the samples directory:
+2) Take the `pdfservices-api-credentials.json` file and place it in a new directory.
 
-![alt](./shot6.png)
-
-<InlineAlert slots="text" />
-
-Note that that private key is *also* found in this directory so feel free to copy them both from here.
-
-3) Take these two files and place them in a new directory.
-
-4) In this directory, create a new file named `pom.xml` and copy the following contents:
+3) In this directory, create a new file named `pom.xml` and copy the following contents:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -71,7 +63,7 @@ Note that that private key is *also* found in this directory so feel free to cop
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
     <maven.compiler.target>1.8</maven.compiler.target>
-    <pdfservices.sdk.version>2.2.2</pdfservices.sdk.version>
+    <pdfservices.sdk.version>3.4.0</pdfservices.sdk.version>
   </properties>
 
   <dependencies>
@@ -162,7 +154,7 @@ This file will define what dependencies we need and how the application will be 
 
 Our application will take a Word document, `receiptTemplate.docx` (downloadable from [here](/receiptTemplate.docx)), and combine it with data in a JSON file, `receipt.json` (downloadable from [here](/receipt.json)), to be sent to the Acrobat Services API and generate a receipt PDF.
 
-5) In your editor, open the directory where you previously copied the credentials, and create a new directory, `src/main/java`. In that directory, create `GeneratePDF.java`. 
+4) In your editor, open the directory where you previously copied the credentials, and create a new directory, `src/main/java`. In that directory, create `GeneratePDF.java`. 
 
 Now you're ready to begin coding.
 
@@ -223,7 +215,7 @@ Notice how the tokens in the Word document match up with values in our JSON. Whi
 
 3) We'll begin by including our required dependencies:
 
-```java
+```javascript
 import com.adobe.pdfservices.operation.ExecutionContext;
 import com.adobe.pdfservices.operation.auth.Credentials;
 import com.adobe.pdfservices.operation.exception.SdkException;
@@ -247,7 +239,7 @@ import org.json.JSONObject;
 
 4) Now let's define our main class:
 
-```java
+```javascript
 public class GeneratePDF {
 
     private static final org.slf4j.Logger LOGGER = LoggerFactory.getLogger(GeneratePDF.class);
@@ -261,7 +253,7 @@ public class GeneratePDF {
 
 5) Inside our class, we'll begin by defining our input Word, JSON and output filenames. If the output file already exists, it will be deleted:
 
-```Java
+```javascript
 String input_file = "./receiptTemplate.docx";
 
 String output_file = "./generatedReceipt.pdf";
@@ -275,22 +267,32 @@ JSONObject jsonDataForMerge = new JSONObject(json);
 
 These lines are hard coded but in a real application would typically be dynamic.
 
+6) Set the environment variables `PDF_SERVICES_CLIENT_ID` and `PDF_SERVICES_CLIENT_SECRET` by running the following commands and replacing placeholders `YOUR CLIENT ID` and `YOUR CLIENT SECRET` with the credentials present in `pdfservices-api-credentials.json` file:
+- **Windows:**
+  - `set PDF_SERVICES_CLIENT_ID=<YOUR CLIENT ID>`
+  - `set PDF_SERVICES_CLIENT_SECRET=<YOUR CLIENT SECRET>`
 
-6) Next, we can create our credentials and use them:
+- **MacOS/Linux:**
+  - `export PDF_SERVICES_CLIENT_ID=<YOUR CLIENT ID>`
+  - `export PDF_SERVICES_CLIENT_SECRET=<YOUR CLIENT SECRET>`
 
-```java
+
+7) Next, we can create our credentials and use them:
+
+```javascript
 // Initial setup, create credentials instance.
-Credentials credentials = Credentials.serviceAccountCredentialsBuilder()
-		.fromFile("pdfservices-api-credentials.json")
-		.build();
+Credentials credentials = Credentials.servicePrincipalCredentialsBuilder()
+    .withClientId("PDF_SERVICES_CLIENT_ID")
+    .withClientSecret("PDF_SERVICES_CLIENT_SECRET")
+    .build();
 
 // Create an ExecutionContext using credentials.
 ExecutionContext executionContext = ExecutionContext.create(credentials);
 ```
 
-7) Now, let's create the operation:
+8) Now, let's create the operation:
 
-```java
+```javascript
 DocumentMergeOptions documentMergeOptions = new DocumentMergeOptions(jsonDataForMerge, OutputFormat.PDF);
 
 DocumentMergeOperation documentMergeOperation = DocumentMergeOperation.createNew(documentMergeOptions);
@@ -302,9 +304,9 @@ documentMergeOperation.setInput(source);
 
 This set of code defines what we're doing (a document merge operation, the SDK's way of describing Document Generation), points to our local JSON file and specifies the output is a PDF. It also points to the Word file used as a template.
 
-8) The next code block executes the operation:
+9) The next code block executes the operation:
 
-```java
+```javascript
 // Execute the operation
 FileRef result = documentMergeOperation.execute(executionContext);
 
@@ -318,7 +320,7 @@ This code runs the Document Generation process and then stores the result PDF do
 
 Here's the complete application (`src/main/java/GeneratePDF.java`):
 
-```java
+```javascript
 import com.adobe.pdfservices.operation.ExecutionContext;
 import com.adobe.pdfservices.operation.auth.Credentials;
 import com.adobe.pdfservices.operation.exception.SdkException;
@@ -360,9 +362,10 @@ public class GeneratePDF {
       		System.out.println("About to generate a PDF based on " + input_file + "\n");
 
             // Initial setup, create credentials instance.
-            Credentials credentials = Credentials.serviceAccountCredentialsBuilder()
-                    .fromFile("pdfservices-api-credentials.json")
-                    .build();
+            Credentials credentials = Credentials.servicePrincipalCredentialsBuilder()
+                .withClientId("PDF_SERVICES_CLIENT_ID")
+                .withClientSecret("PDF_SERVICES_CLIENT_SECRET")
+                .build();
 
             // Create an ExecutionContext using credentials.
             ExecutionContext executionContext = ExecutionContext.create(credentials);
@@ -380,8 +383,8 @@ public class GeneratePDF {
 
             // Save the result at the specified location
             result.saveAs(output_file);
-
-      		System.out.println("All Done");
+            
+            System.out.println("All Done");
             
         } catch (ServiceApiException | IOException | SdkException | ServiceUsageException e) {
             LOGGER.error("Exception encountered while executing operation", e);

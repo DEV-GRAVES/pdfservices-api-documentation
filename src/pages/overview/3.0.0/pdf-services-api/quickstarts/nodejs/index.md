@@ -10,13 +10,13 @@ To get started using Adobe PDF Services API, let's walk through a simple scenari
 
 To complete this guide, you will need:
 
-* [Node.js](https://nodejs.org) - Node.js version 10.13.0 or higher is required. 
+* [Node.js](https://nodejs.org) - Node.js version 14.0 or higher is required. 
 * An Adobe ID. If you do not have one, the credential setup will walk you through creating one.
 * A way to edit code. No specific editor is required for this guide.
 
 ## Step One: Getting credentials
 
-1) To begin, open your browser to <https://documentservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
+1) To begin, open your browser to <https://acrobatservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
 
 ![Sign in](./shot1.png)
 

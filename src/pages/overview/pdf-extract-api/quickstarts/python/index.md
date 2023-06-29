@@ -17,7 +17,7 @@ To complete this guide, you will need:
 
 ## Step One: Getting credentials
 
-1) To begin, open your browser to <https://documentservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-extract-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
+1) To begin, open your browser to <https://acrobatservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-extract-api>. If you are not already logged in to Adobe.com, you will need to sign in or create a new user. Using a personal email account is recommend and not a federated ID.
 
 ![Sign in](./shot1.png)
 
@@ -29,29 +29,21 @@ To complete this guide, you will need:
 
 5) Click the checkbox saying you agree to the developer terms and then click "Create credentials."
 
-![Project setup](./shot2.png)
+![Project setup](./shot2_spc.png)
 
 6) After your credentials are created, they are automatically  downloaded:
 
-![alt](./shot3.png)
+![alt](./shot3_spc.png)
 
 ## Step Two: Setting up the project
 
-1) In your Downloads folder, find the ZIP file with your credentials: PDFServicesSDK-Python (Extract)Samples.zip. If you unzip that archive, you will find a README file, your private key, and a folder of samples:
+1) In your Downloads folder, find the ZIP file with your credentials: PDFServicesSDK-Python (Extract)Samples.zip. If you unzip that archive, you will find a README file, a folder of samples and the `pdfservices-api-credentials.json` file.
 
-![alt](./shot5.png)
+![alt](./shot5_spc.png)
 
-2) We need two things from this download. The `private.key` file (as shown in the screenshot above, and the `pdfservices-api-credentials.json` file found in the samples directory:
+2) Take the `pdfservices-api-credentials.json` file and place it in a new directory.
 
-![alt](./shot6.png)
-
-<InlineAlert slots="text" />
-
-Note that that private key is *also* found in this directory so feel free to copy them both from here.
-
-3) Take these two files and place them in a new directory.
-
-4) At the command line, change to the directory you created, and run the following command to install the Python SDK: `pip install pdfservices-sdk`.
+3) At the command line, change to the directory you created, and run the following command to install the Python SDK: `pip install pdfservices-sdk`.
 
 ![alt](shot7.png)
 
@@ -59,7 +51,7 @@ At this point, we've installed the Python SDK for Adobe PDF Services API as a de
 
 Our application will take a PDF, `Adobe Extract API Sample.pdf` (downloadable from [here](/Adobe%20Extract%20API%20Sample.pdf) and extract it's contents. The results will be saved as a ZIP file, `ExtractTextInfoFromPDF.zip`. We will then parse the results from the ZIP and print out the text of any `H1` headers found in the PDF.
 
-6) In your editor, open the directory where you previously copied the credentials. Create a new file, `extract.py`.
+4) In your editor, open the directory where you previously copied the credentials. Create a new file, `extract.py`.
 
 Now you're ready to begin coding.
 
@@ -100,9 +92,10 @@ This defines what our output ZIP will be and optionally deletes it if it already
 
 ```python
 #Initial setup, create credentials instance.
-credentials = Credentials.service_account_credentials_builder()\
-	.from_file("./pdfservices-api-credentials.json") \
-	.build()
+credentials = Credentials.service_principal_credentials_builder()
+    .with_client_id('PDF_SERVICES_CLIENT_ID')
+    .with_client_secret('PDF_SERVICES_CLIENT_SECRET')
+    .build();
 
 #Create an ExecutionContext using credentials and create a new operation instance.
 execution_context = ExecutionContext.create(credentials)
@@ -143,7 +136,7 @@ This code runs the Extraction process and then stores the result zip to the file
 6) In this block, we read in the ZIP file, extract the JSON result file, and parse it:
 
 ```python
-archive = zipfile.ZipFile(output_zip, 'r')
+archive = zipfile.ZipFile(zip_file, 'r')
 jsonentry = archive.open('structuredData.json')
 jsondata = jsonentry.read()
 data = json.loads(jsondata)
@@ -174,19 +167,20 @@ import os.path
 import zipfile
 import json
 
-output_zip = "./ExtractTextInfoFromPDF.zip"
+zip_file = "./ExtractTextInfoFromPDF.zip"
 
-if os.path.isfile(output_zip):
-	os.remove(output_zip)
+if os.path.isfile(zip_file):
+	os.remove(zip_file)
 
 input_pdf = "./Adobe Extract API Sample.pdf"
 
 try:
 
 	#Initial setup, create credentials instance.
-	credentials = Credentials.service_account_credentials_builder()\
-		.from_file("./pdfservices-api-credentials.json") \
-		.build()
+    credentials = Credentials.service_principal_credentials_builder()
+        .with_client_id('PDF_SERVICES_CLIENT_ID')
+        .with_client_secret('PDF_SERVICES_CLIENT_SECRET')
+        .build();
 
 	#Create an ExecutionContext using credentials and create a new operation instance.
 	execution_context = ExecutionContext.create(credentials)
@@ -206,11 +200,11 @@ try:
 	result: FileRef = extract_pdf_operation.execute(execution_context)
 
 	#Save the result to the specified location.
-	result.save_as(output_zip)
+	result.save_as(zip_file)
 
 	print("Successfully extracted information from PDF. Printing H1 Headers:\n");
 
-	archive = zipfile.ZipFile(output_zip, 'r')
+	archive = zipfile.ZipFile(zip_file, 'r')
 	jsonentry = archive.open('structuredData.json')
 	jsondata = jsonentry.read()
 	data = json.loads(jsondata)

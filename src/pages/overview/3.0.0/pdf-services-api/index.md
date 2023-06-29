@@ -15,7 +15,7 @@ The SDK only supports server-based use cases where credentials are saved securel
 
 ## Getting credentials
 
-Developing with the PDF Services SDK requires an Adobe-provided credential. To get one, [click HERE](https://documentservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api), and complete the workflow. Be sure to copy and save the credential values to a secure location.
+Developing with the PDF Services SDK requires an Adobe-provided credential. To get one, [click HERE](https://acrobatservices.adobe.com/dc-integration-creation-app-cdn/main.html?api=pdf-services-api), and complete the workflow. Be sure to copy and save the credential values to a secure location.
 
 **Validity term**: The certificate associated with your credential is valid for one year. However, you can simply regenerate a new credential or apply a new certificate to the current credentials from the Document Cloud [developer console](https://console.adobe.io/).
 
@@ -188,7 +188,7 @@ Jumpstart your development by bookmarking or downloading the following key resou
 
 The samples project requires the following:
 
--   .NET Core: version 3.1 or above
+-   .NET Core: version 6.0 or above
 -   A build Tool: Either Visual Studio or .NET Core CLI.
 
 #### Authentication
@@ -332,7 +332,7 @@ After downloading the zip, you can either run the samples in the zip directly, o
 
 Running any sample or custom code requires the following steps:
 
-1.  Install [Node.js 10.13.0](https://nodejs.org/en/download/) or higher.
+1.  Install [Node.js 14.0](https://nodejs.org/en/download/) or higher.
 
 <InlineAlert slots="text"/>
 
